@@ -38,17 +38,21 @@ const playerTextColors = {
 function playerMove(index) {
     // Check if it's currently the user's turn
     if (currentPlayer === 'X') {
+      
         // Disable clicking on the board while waiting for the bot's move
         document.querySelectorAll('.cell').forEach(cell => {
             cell.style.pointerEvents = 'none';
+            
         });
 
         if (board[index] === '') {
             board[index] = currentPlayer;
+            
             let cell = document.getElementsByClassName('cell')[index];
             cell.innerText = currentPlayer;
             cell.style.background = currentPlayer === 'X' ? 'radial-gradient(circle, #f84a4a, #fb3e3c, #fd302d, #fe1f1c, #ff0000)' : 'radial-gradient(circle, #ffdc60, #ffd24e, #fec73a, #ffbc25, #ffb100)';
             cell.style.color = playerTextColors[currentPlayer]; // Change text color
+            
 
             // Check for win after the move
             if (checkWin()) {
@@ -61,6 +65,7 @@ function playerMove(index) {
                 currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
                 setTimeout(botMove, 500);
             }
+            document.getElementById('clickSound').play();
         }
     }
 }
@@ -129,12 +134,14 @@ function updateBoard(index) {
         alert('It\'s a draw!');
         resetBoard();
     } else {
+      document.getElementById('BotMove').play();
         // Switch to the user's turn after a short delay
         currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
         // Enable clicking on the board after a short delay
         setTimeout(() => {
             document.querySelectorAll('.cell').forEach(cell => {
                 cell.style.pointerEvents = 'auto';
+                
             });
         }, 500);
     }
@@ -152,6 +159,7 @@ function makeSuboptimalMove() {
             if (checkWinCondition(tempBoard, currentPlayer)) {
                 // Make the suboptimal move
                 playerMove(emptyCell);
+                document.getElementById('BotMove').play();
                 return;
             }
         }
@@ -167,6 +175,7 @@ function makeSuboptimalMove() {
     let randomIndex = Math.floor(Math.random() * emptyCells.length);
     let randomCell = emptyCells[randomIndex];
     playerMove(randomCell);
+    document.getElementById('BotMove').play();
 }
 
   
@@ -175,38 +184,53 @@ function makeSuboptimalMove() {
   }
   
 
-function checkWin() {
-  if (winningCombos.some(combo => combo.every(index => board[index] === currentPlayer))) {
-    // Delay the alert by 0.5 seconds
-    setTimeout(() => {
-      // Show a confirm dialog with customized buttons
-      let restart = confirm(`${currentPlayer} wins! Would you like to restart the game?`);
-      if (restart) {
-        window.location.reload(); // Reload the page if user chooses to restart
-      } else {
-        // Perform any other action if user chooses not to restart
-        // For example, close the window
-        window.close();
-      }
-    }, 250); // 500 milliseconds delay
-    return true;
-  } else if (board.every(cell => cell !== '')) {
-    // Delay the alert by 0.5 seconds
-    setTimeout(() => {
-      // Show a confirm dialog with customized buttons
-      let restart = confirm('It\'s a draw! Would you like to restart the game?');
-      if (restart) {
-        window.location.reload(); // Reload the page if user chooses to restart
-      } else {
-        // Perform any other action if user chooses not to restart
-        // For example, close the window
-        window.close();
-      }
-    }, 250); // 500 milliseconds delay
-    return true;
-  }
-  return false;
+  function checkWin() {
+    if (winningCombos.some(combo => combo.every(index => board[index] === currentPlayer))) {
+        // Delay the alert by 0.5 seconds
+        let playerName = currentPlayer === 'X' ? 'You' : document.querySelector('.opponent-name').textContent;
+        if (currentPlayer === 'X') {
+            document.getElementById('XWinSound').play();
+        } else {
+            document.getElementById('FailSound').play();
+        }
+        setTimeout(() => {
+            // Show a confirm dialog with customized buttons
+            let restart = confirm(`${playerName} wins! Would you like to restart the game?`);
+            if (restart) {
+                window.location.reload(); // Reload the page if user chooses to restart
+            } else {
+                // Perform any other action if user chooses not to restart
+                // For example, close the window
+                window.close();
+            }
+        }, 250); // 500 milliseconds delay
+        return true;
+    } else if (board.every(cell => cell !== '')) {
+        document.getElementById('drawSound').play();
+        // Delay the alert by 0.5 seconds
+        setTimeout(() => {
+            // Show a confirm dialog with customized buttons
+            let restart = confirm('It\'s a draw! Would you like to restart the game?');
+            if (restart) {
+                window.location.reload(); // Reload the page if user chooses to restart
+            } else {
+                // Perform any other action if user chooses not to restart
+                // For example, close the window
+                window.close();
+            }
+        }, 250); // 500 milliseconds delay
+        if (currentPlayer === 'X') {
+            // Play Xwin.mp3 if the player X wins
+            playSound('audioXwin');
+        } else {
+            // Play Fail.mp3 if the player O wins
+            playSound('audioFail');
+        }
+        return true;
+    }
+    return false;
 }
+
 
 function resetBoard() {
   // Clear the board

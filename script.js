@@ -18,29 +18,36 @@ const playerTextColors = {
 };
 
 function playerMove(index) {
-    if (board[index] === '') {
-      board[index] = currentPlayer;
-      let cell = document.getElementsByClassName('cell')[index];
-      cell.innerText = currentPlayer;
-      cell.style.background = currentPlayer === 'X' ? 'radial-gradient(circle, #f84a4a, #fb3e3c, #fd302d, #fe1f1c, #ff0000)' : 'radial-gradient(circle, #ffdc60, #ffd24e, #fec73a, #ffbc25, #ffb100)';
-      cell.style.color = playerTextColors[currentPlayer]; // Change text color
+  if (board[index] === '') {
+    // Play the click sound
+    document.getElementById('clickSound').play();
 
-      // Check for win after the move
-      if (checkWin()) {
-        // No need to do anything here, alert is handled in checkWin()
-      } else if (board.every(cell => cell !== '')) {
-        alert('It\'s a draw!');
-        resetBoard();
-      } else {
-        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-      }
+    board[index] = currentPlayer;
+    let cell = document.getElementsByClassName('cell')[index];
+    cell.innerText = currentPlayer;
+    cell.style.background = currentPlayer === 'X' ? 'radial-gradient(circle, #f84a4a, #fb3e3c, #fd302d, #fe1f1c, #ff0000)' : 'radial-gradient(circle, #ffdc60, #ffd24e, #fec73a, #ffbc25, #ffb100)';
+    cell.style.color = playerTextColors[currentPlayer]; // Change text color
+    
+    // Check for win after the move
+    if (checkWin()) {
+      // No need to do anything here, alert is handled in checkWin()
+    } else if (board.every(cell => cell !== '')) {
+      alert('It\'s a draw!');
+      resetBoard();
+    } else {
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
     }
+  }
 }
-
   
 
 function checkWin() {
   if (winningCombos.some(combo => combo.every(index => board[index] === currentPlayer))) {
+      if (currentPlayer === 'X') {
+          document.getElementById('XWinSound').play();
+      } else {
+          document.getElementById('OWinSound').play();
+      }
       // Delay the alert by 0.5 seconds
       setTimeout(() => {
           // Show a confirm dialog with customized buttons
@@ -55,6 +62,7 @@ function checkWin() {
       }, 250); // 500 milliseconds delay
       return true;
   } else if (board.every(cell => cell !== '')) {
+      document.getElementById('drawSound').play();
       // Delay the alert by 0.5 seconds
       setTimeout(() => {
           // Show a confirm dialog with customized buttons
@@ -71,12 +79,15 @@ function checkWin() {
   }
   return false;
 }
+
 function resetBoard() {
     // Clear the board
     board = ['', '', '', '', '', '', '', '', ''];
     currentPlayer = 'X';
     document.getElementById('result').innerText = '';
-  
+
+    document.getElementById('reset').play(); // Play the reset sound
+
     // Clear text content and background of cells
     document.querySelectorAll('.cell').forEach(cell => {
       cell.innerText = '';
@@ -84,3 +95,9 @@ function resetBoard() {
       cell.style.color = ''; // Reset text color
     });
 }
+// Add this code to your JavaScript file
+
+document.querySelector('.resetBtn').addEventListener('click', function() {
+  // Play the reset sound when the reset button is clicked
+  document.getElementById('reset').play();
+});
