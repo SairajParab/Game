@@ -59,6 +59,44 @@ body, html {
   .cell:hover {
     background: #d4f5ff;
   }
+  .RandomBtn{
+    background-image: radial-gradient(circle,  #f84a4a, #fb3e3c, #fd302d, #fe1f1c, #ff0000);
+    
+    border: none;
+    color:  white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 25px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+
+  .RandomBtn:hover {
+    background-image: radial-gradient(circle, #ffdc60, #ffd24e, #fec73a, #ffbc25, #ffb100);
+    color:  white;
+  }
+
+  .irlBtn {
+    background-image: radial-gradient(circle, #ffdc60, #ffd24e, #fec73a, #ffbc25, #ffb100);
+    
+    border: none;
+    color:  white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 25px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+  .irlBtn:hover {
+    background-image: radial-gradient(circle, #f84a4a, #fb3e3c, #fd302d, #fe1f1c, #ff0000);
+    color:  white;
+  }
   
   .resetBtn {
     background-image: radial-gradient(circle, #ffdc60, #ffd24e, #fec73a, #ffbc25, #ffb100);

@@ -40,32 +40,37 @@ function playerMove(index) {
   
 
 function checkWin() {
-    if (winningCombos.some(combo => combo.every(index => board[index] === currentPlayer))) {
-        // Show a confirm dialog with customized buttons
-        let restart = confirm(`${currentPlayer} wins! Would you like to restart the game?`);
-        if (restart) {
-            window.location.reload(); // Reload the page if user chooses to restart
-        } else {
-            // Perform any other action if user chooses not to restart
-            // For example, close the window
-            window.close();
-        }
-        return true;
-    } else if (board.every(cell => cell !== '')) {
-        // Show a confirm dialog with customized buttons
-        let restart = confirm('It\'s a draw! Would you like to restart the game?');
-        if (restart) {
-            window.location.reload(); // Reload the page if user chooses to restart
-        } else {
-            // Perform any other action if user chooses not to restart
-            // For example, close the window
-            window.close();
-        }
-        return true;
-    }
-    return false;
+  if (winningCombos.some(combo => combo.every(index => board[index] === currentPlayer))) {
+      // Delay the alert by 0.5 seconds
+      setTimeout(() => {
+          // Show a confirm dialog with customized buttons
+          let restart = confirm(`${currentPlayer} wins! Would you like to restart the game?`);
+          if (restart) {
+              window.location.reload(); // Reload the page if user chooses to restart
+          } else {
+              // Perform any other action if user chooses not to restart
+              // For example, close the window
+              window.close();
+          }
+      }, 250); // 500 milliseconds delay
+      return true;
+  } else if (board.every(cell => cell !== '')) {
+      // Delay the alert by 0.5 seconds
+      setTimeout(() => {
+          // Show a confirm dialog with customized buttons
+          let restart = confirm('It\'s a draw! Would you like to restart the game?');
+          if (restart) {
+              window.location.reload(); // Reload the page if user chooses to restart
+          } else {
+              // Perform any other action if user chooses not to restart
+              // For example, close the window
+              window.close();
+          }
+      }, 250); // 500 milliseconds delay
+      return true;
+  }
+  return false;
 }
-
 function resetBoard() {
     // Clear the board
     board = ['', '', '', '', '', '', '', '', ''];
