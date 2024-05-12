@@ -16,6 +16,7 @@
     <h1 class="heading">
         <span class="tic-color">TIC</span><span class="toe-color"> TAC</span>
         <span class="tic-color">TOE</span></h1>
+        <p class="opponent-text">You are playing against <span class="opponent-name"></span></p>
     <div id="board" class="board">
       <div class="cell" onclick="playerMove(0)"></div>
       <div class="cell" onclick="playerMove(1)"></div>
@@ -28,7 +29,9 @@
       <div class="cell" onclick="playerMove(8)"></div>
     </div>
     <button onclick="window.location.reload();" class="resetBtn">Reset</button>
-    <p class="made-by">Made By @Sairajjsparab</p>
+    <p class="made-by">
+        Made By <a href="https://www.instagram.com/sairajjsparab/" class="made-by">@sairajjsparab</a>
+      </p>
   </div>
   <script src="botScript.js"></script>
 </body>

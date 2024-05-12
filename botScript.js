@@ -10,6 +10,24 @@ const winningCombos = [
   [0, 4, 8],
   [2, 4, 6]
 ];
+// List of Indian names
+const indianNames = [
+    'Rohan', 'Aisha', 'Aarav', 'Diya', 'Kabir', 'Ananya', 'Aditya', 'Kavya', 'Ishan', 'Tanvi', 'Advait', 'Alisha', 'Vihaan', 
+    'Riya', 'Arjun', 'Aarohi', 'Yash', 'Sia', 'Myra', 'Sara', 'Aryan', 'Zara', 'Atharv', 'Ishika', 'Avni', 'Vivaan', 'Isha', 
+    'Rehaan', 'Siya', 'Vedant', 'Anvi', 'Aarush', 'Nisha', 'Arnav', 'Anaya', 'Pranav', 'Aanya', 'Ishani', 'Aadi', 'Tanya', 
+    'Kia', 'Arush', 'Riyaan', 'Nia', 'Rudra', 'Saisha', 'Reyansh', 'Mahira', 'Aadi', 'Ira', 'Aayush', 'Navya', 'Kian', 'Aarushi', 
+    'Aaditya', 'Pihu', 'Aarav', 'Eva', 'Vihaan', 'Anvi', 'Arnav', 'Hansika', 'Reyansh', 'Aarna', 'Aryan', 'Kavya', 'Advik', 'Myra', 
+    'Ridhi', 'Shaurya', 'Anvi', 'Aaditya', 'Shreya'
+  ];
+  
+
+// Function to select a random name from the list
+function getRandomName() {
+    return indianNames[Math.floor(Math.random() * indianNames.length)];
+}
+
+// Update the opponent name
+document.querySelector('.opponent-name').textContent = getRandomName();
 
 // Define colors for text of each player
 const playerTextColors = {
@@ -18,33 +36,39 @@ const playerTextColors = {
 };
 
 function playerMove(index) {
-  if (board[index] === '') {
-    board[index] = currentPlayer;
-    let cell = document.getElementsByClassName('cell')[index];
-    cell.innerText = currentPlayer;
-    cell.style.background = currentPlayer === 'X' ? 'radial-gradient(circle, #f84a4a, #fb3e3c, #fd302d, #fe1f1c, #ff0000)' : 'radial-gradient(circle, #ffdc60, #ffd24e, #fec73a, #ffbc25, #ffb100)';
-    cell.style.color = playerTextColors[currentPlayer]; // Change text color
+    // Check if it's currently the user's turn
+    if (currentPlayer === 'X') {
+        // Disable clicking on the board while waiting for the bot's move
+        document.querySelectorAll('.cell').forEach(cell => {
+            cell.style.pointerEvents = 'none';
+        });
 
-    // Check for win after the move
-    if (checkWin()) {
-      // No need to do anything here, alert is handled in checkWin()
-    } else if (board.every(cell => cell !== '')) {
-      alert('It\'s a draw!');
-      resetBoard();
-    } else {
-      // Switch to the bot's turn
-      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-      // If the bot is playing, make its move after a short delay
-      if (currentPlayer === 'O') {
-        setTimeout(botMove, 500);
-      }
+        if (board[index] === '') {
+            board[index] = currentPlayer;
+            let cell = document.getElementsByClassName('cell')[index];
+            cell.innerText = currentPlayer;
+            cell.style.background = currentPlayer === 'X' ? 'radial-gradient(circle, #f84a4a, #fb3e3c, #fd302d, #fe1f1c, #ff0000)' : 'radial-gradient(circle, #ffdc60, #ffd24e, #fec73a, #ffbc25, #ffb100)';
+            cell.style.color = playerTextColors[currentPlayer]; // Change text color
+
+            // Check for win after the move
+            if (checkWin()) {
+                // No need to do anything here, alert is handled in checkWin()
+            } else if (board.every(cell => cell !== '')) {
+                alert('It\'s a draw!');
+                resetBoard();
+            } else {
+                // Switch to the bot's turn after a short delay
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                setTimeout(botMove, 500);
+            }
+        }
     }
-  }
 }
-function botMove() {
-    // Generate a random number between 0 and 1
-    let randomChance = Math.random();
 
+
+
+
+function botMove() {
     // Strategy: If the bot can win in the next move, make that move.
     // Otherwise, if the user is about to win in the next move, block them.
     // Otherwise, make a random move.
@@ -58,7 +82,7 @@ function botMove() {
             tempBoard[emptyCell] = currentPlayer;
             if (checkWinCondition(tempBoard, currentPlayer)) {
                 // If the bot wins in the next move, make that move
-                playerMove(emptyCell);
+                updateBoard(emptyCell);
                 return;
             }
         }
@@ -73,28 +97,49 @@ function botMove() {
             tempBoard[emptyCell] = 'X'; // Assuming the user is represented by 'X'
             if (checkWinCondition(tempBoard, 'X')) {
                 // If the user is about to win, block them by making a move in that cell
-                playerMove(emptyCell);
+                updateBoard(emptyCell);
                 return;
             }
         }
     }
 
-    // Occasionally make a suboptimal move to let the player win
-    if (randomChance < 0.1) {
-        makeSuboptimalMove();
-    } else {
-        // Otherwise, make a random move
-        let emptyCells = [];
-        for (let i = 0; i < board.length; i++) {
-            if (board[i] === '') {
-                emptyCells.push(i);
-            }
+    // Otherwise, make a random move
+    let emptyCells = [];
+    for (let i = 0; i < board.length; i++) {
+        if (board[i] === '') {
+            emptyCells.push(i);
         }
-        let randomIndex = Math.floor(Math.random() * emptyCells.length);
-        let randomCell = emptyCells[randomIndex];
-        playerMove(randomCell);
+    }
+    let randomIndex = Math.floor(Math.random() * emptyCells.length);
+    let randomCell = emptyCells[randomIndex];
+    updateBoard(randomCell);
+}
+
+function updateBoard(index) {
+    board[index] = currentPlayer;
+    let cell = document.getElementsByClassName('cell')[index];
+    cell.innerText = currentPlayer;
+    cell.style.background = currentPlayer === 'X' ? 'radial-gradient(circle, #f84a4a, #fb3e3c, #fd302d, #fe1f1c, #ff0000)' : 'radial-gradient(circle, #ffdc60, #ffd24e, #fec73a, #ffbc25, #ffb100)';
+    cell.style.color = playerTextColors[currentPlayer]; // Change text color
+
+    // Check for win after the move
+    if (checkWin()) {
+        // No need to do anything here, alert is handled in checkWin()
+    } else if (board.every(cell => cell !== '')) {
+        alert('It\'s a draw!');
+        resetBoard();
+    } else {
+        // Switch to the user's turn after a short delay
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        // Enable clicking on the board after a short delay
+        setTimeout(() => {
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.style.pointerEvents = 'auto';
+            });
+        }, 500);
     }
 }
+
 
 function makeSuboptimalMove() {
     // Find a cell that would allow the player to win

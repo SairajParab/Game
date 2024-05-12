@@ -125,3 +125,21 @@ body, html {
     color: rgb(92, 92, 92); /* Text color */
   
   }
+  .made-by a {
+    font-size: 1.1em;
+    color: rgb(92, 92, 92); /* Text color */
+    text-decoration: none; /* Remove underline */
+  }
+  
+  .made-by a:hover {
+    color: #ffb100; /* Hover color */
+  }
+  
+  .opponent-text {
+    color: red;
+    font-size: 1.2em;
+}
+
+.opponent-name {
+    color: #ffb100;
+}
