@@ -79,4 +79,11 @@ body, html {
     background-image: radial-gradient(circle, #f84a4a, #fb3e3c, #fd302d, #fe1f1c, #ff0000);
     color:  white;
   }
+  .made-by {
+    text-align: center; /* Center the text */
+    margin-top: 10px; /* Add some top margin */
+    margin-bottom: 5px;
+    font-size: 1.2em; /* Adjust font size if needed */
+    color: rgb(92, 92, 92); /* Text color */
   
+  }
